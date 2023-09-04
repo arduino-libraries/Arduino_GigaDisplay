@@ -7,7 +7,7 @@ This library contains a set of examples to use the [GIGA Display Shield](docs.ar
 
 It will also install the [lvgl](https://github.com/lvgl/lvgl) library, which is required for a large number of examples in this repository.
 
->For any issues with the examples, please visit the repository of the library in the links above.
+>For any issues with the examples, please visit the repository of the libraries listed above.
 
 ## GigaDisplayRGB
 
