@@ -8,7 +8,7 @@
   This example code is in the public domain.
 */
 
-#include <Arduino_GigaDisplayRGB.h>
+#include <Arduino_GigaDisplay.h>
 
 //Create rgb object
 GigaDisplayRGB rgb;
