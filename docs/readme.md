@@ -5,14 +5,14 @@ Minimal library for controlling the built-in RGB on the GIGA Display Shield via 
 To use this library:
 
 ```
-#include <Arduino_GigaDisplayRGB.h>
+#include <Arduino_GigaDisplay.h>
 ```
 
 
 Minimal example:
 
 ```
-#include <Arduino_GigaDisplayRGB.h>
+#include <Arduino_GigaDisplay.h>
 
 GigaDisplayRGB rgb;
 
