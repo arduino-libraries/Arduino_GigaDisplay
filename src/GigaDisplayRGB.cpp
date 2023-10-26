@@ -13,8 +13,8 @@ void GigaDisplayRGB::begin()
 void GigaDisplayRGB::on(uint8_t r, uint8_t g, uint8_t b)
 {
     writeByte(0x10, r);
-    writeByte(0x12, g);
-    writeByte(0x11, b);
+    writeByte(0x11, g);
+    writeByte(0x12, b);
     writeByte(0x2b, 0xc5);
 }
 
