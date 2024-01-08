@@ -28,7 +28,7 @@ class GigaDisplayBacklight {
         }
         void cb() {
             static int counter = 0;
-            if (counter > intensity) {
+            if (counter >= intensity) {
                 *pin = 0;
             } else {
                 *pin = 1;
