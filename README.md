@@ -1,6 +1,7 @@
 Arduino_GigaDisplay
 ===================
 [![Spell Check status](https://github.com/arduino-libraries/Arduino_GigaDisplay/actions/workflows/spell-check-task.yml/badge.svg)](https://github.com/arduino-libraries/Arduino_GigaDisplay/actions/workflows/spell-check-task.yml)
+[![Sync Labels status](https://github.com/arduino-libraries/Arduino_GigaDisplay/actions/workflows/sync-labels-npm.yml/badge.svg)](https://github.com/arduino-libraries/Arduino_GigaDisplay/actions/workflows/sync-labels-npm.yml)
 
 This library contains a set of examples to use the [GIGA Display Shield](docs.arduino.cc/hardware/giga-display-shield). Upon installing this library from the Arduino IDE, the following libraries will also be installed:
 - [ArduinoGraphics](https://github.com/arduino-libraries/ArduinoGraphics)
