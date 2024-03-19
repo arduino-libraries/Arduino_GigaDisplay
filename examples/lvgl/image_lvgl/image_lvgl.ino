@@ -1,3 +1,8 @@
+/*
+* Online image converter for LVGL v9: https://lvgl.io/tools/imageconverter_v9
+* Online image converter for LVGL v8 or earlier: https://lvgl.io/tools/imageconverter
+*/
+
 #include "Arduino_H7_Video.h"
 #include "lvgl.h"
 
