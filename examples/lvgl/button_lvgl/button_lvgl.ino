@@ -6,7 +6,11 @@ Arduino_H7_Video          Display(800, 480, GigaDisplayShield);
 Arduino_GigaDisplayTouch  TouchDetector;
 
 static void btn_event_cb(lv_event_t * e) {
-  lv_obj_t * btn = lv_event_get_target(e);
+  #if (LVGL_VERSION_MAJOR == 9)
+    lv_obj_t * btn = (lv_obj_t *) lv_event_get_target(e);
+  #else 
+    lv_obj_t * btn = lv_event_get_target(e);
+  #endif
   lv_obj_t * label = lv_obj_get_child(btn, 0);
   lv_label_set_text_fmt(label, "Clicked!");
 }
