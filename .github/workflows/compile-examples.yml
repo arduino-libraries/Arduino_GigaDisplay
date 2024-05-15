@@ -1,0 +1,104 @@
+name: Compile Examples
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/compile-examples.yml"
+      - "library.properties"
+      - "examples/**"
+      - "src/**"
+  push:
+    paths:
+      - ".github/workflows/compile-examples.yml"
+      - "library.properties"
+      - "examples/**"
+      - "src/**"
+  # Scheduled trigger checks for breakage caused by changes to external resources (libraries, platforms)
+  schedule:
+    # run every Saturday at 3 AM UTC
+    - cron: "0 3 * * 6"
+  # See: https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#workflow_dispatch
+  workflow_dispatch:
+  # See: https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#repository_dispatch
+  repository_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.board.fqbn }}
+    runs-on: ubuntu-latest
+
+    env:
+      UNIVERSAL_SKETCH_PATHS: |
+        - examples/backlight/SimpleBacklight
+        - examples/basic/ArduinoLogoDrawing
+        - examples/basic/SimpleText
+        - examples/camera/display_camera
+        - examples/gfx/geometrical-shapes
+        - examples/gfx/hello-world
+        - examples/gfx/touch-switch
+        - examples/imu/accelerometer
+        - examples/imu/gyroscope
+        - examples/lvgl/bar_lvgl
+        - examples/lvgl/button_lvgl
+        - examples/lvgl/check_radio_lvgl
+        - examples/lvgl/image_lvgl
+        - examples/lvgl/imu_orientation
+        - examples/lvgl/slider_lvgl
+        - examples/microphone/PDMSerialPlotter
+        - examples/rgb/SimpleRGB
+        - examples/rgb/blink
+
+      SKETCHES_REPORTS_PATH: sketches-reports
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        board:
+          - fqbn: arduino:mbed_portenta:envie_m7
+            platform-name: arduino:mbed_portenta
+          - fqbn: arduino:mbed_giga:giga
+            platform-name: arduino:mbed_giga
+
+        include:
+          - board:
+              platform-name: arduino:mbed_portenta
+            platforms: |
+              # Install Arduino mbed_portenta Boards via Boards Manager
+              - name: arduino:mbed_portenta
+          - board:
+              platform-name: arduino:mbed_giga
+            platforms: |
+              # Install Arduino mbed_giga Boards via Boards Manager
+              - name: arduino:mbed_giga
+        
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          platforms: ${{ matrix.platforms }}
+          fqbn: ${{ matrix.board.fqbn }}
+          libraries: |
+            # Install the library from the local path.
+            - source-path: ./
+            - name: ArduinoGraphics
+            - name: Arduino_GigaDisplayTouch
+            - name: Arduino_BMI270_BMM150
+            - name: Arduino_GigaDisplay_GFX
+            - name: lvgl
+            - name: Arducam_dvp
+          sketch-paths: |
+            ${{ env.UNIVERSAL_SKETCH_PATHS }}
+          enable-deltas-report: true
+          sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
+
+      - name: Save memory usage change report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.SKETCHES_REPORTS_PATH }}
+          if-no-files-found: error
+          path: ${{ env.SKETCHES_REPORTS_PATH }}

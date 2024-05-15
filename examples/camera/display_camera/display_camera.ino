@@ -4,7 +4,7 @@
 #include "dsi.h"
 #include "SDRAM.h"
 
-// This example only works with Greyscale cameras (due to the palette + resize&rotate algo)
+// This example only works with Grayscale cameras (due to the palette + resize&rotate algo)
 #define ARDUCAM_CAMERA_HM01B0
 
 #ifdef ARDUCAM_CAMERA_HM01B0
@@ -58,7 +58,7 @@ void setup() {
     blinkLED();
   }
 
-  // Setup the palette to convert 8 bit greyscale to 32bit greyscale
+  // Setup the palette to convert 8 bit grayscale to 32bit grayscale
   for (int i = 0; i < 256; i++) {
     palette[i] = 0xFF000000 | (i << 16) | (i << 8) | i;
   }
