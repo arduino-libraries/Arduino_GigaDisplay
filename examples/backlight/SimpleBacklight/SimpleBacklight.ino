@@ -13,8 +13,9 @@ void setup() {
   backlight.begin();
 }
 
-int i = 0;
 void loop() {
-  backlight.set(i++ % 100);
-  delay(100);
+  backlight.set(0); // backlight off - 0%
+  delay(1000);
+  backlight.set(100); // backlight on - 100%
+  delay(1000);
 }
