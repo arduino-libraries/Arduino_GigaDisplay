@@ -8,7 +8,7 @@
  * 1. Create a SquareLine Studio project with the following settings:
  *    - Resolution: 800x480
  *    - Color depth: 16-bit
- *    - LVGL version: 8.3.x (NOTE: It only supports LVGL version 8 and earlier.)
+ *    - LVGL version: 9.1
  * 2. Design your GUI using the drag-and-drop tool.
  * 3. Export the LVGL UI files.
  * 4. Open the exported file and copy the 'libraries/ui' folder into your 'Arduino/libraries' directory.
@@ -23,15 +23,11 @@
 #include "Arduino_GigaDisplayTouch.h"
 
 #include "lvgl.h"
-#include "ui.h"
+#include "ui/ui.h"
 
 /* Initialize the GIGA Display Shield with a resolution of 800x480 pixels */
 Arduino_H7_Video Display(800, 480, GigaDisplayShield);
 Arduino_GigaDisplayTouch Touch;
-
-#if (LVGL_VERSION_MAJOR >= 9)
-    #error "SquareLine Studio has ended its collaboration with LVGL. It only supports LVGL version 8 and earlier."
-#endif
 
 void setup() {
     Display.begin();
