@@ -47,8 +47,9 @@ class GigaDisplayBacklight {
         }
     private:
         mbed::Ticker* ticker;
-        mbed::DigitalOut* pin;
+        mbed::DigitalOut* pin
         int intensity;
 };
 #endif  //MBED
+
 #endif
