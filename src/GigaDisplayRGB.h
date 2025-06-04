@@ -13,6 +13,7 @@ class GigaDisplayRGB {
         void writeByte(uint8_t,uint8_t);
 };
 
+#ifdef __MBED__
 #include "mbed.h"
 using namespace std::chrono_literals;
 using namespace std::chrono;
@@ -48,6 +49,7 @@ class GigaDisplayBacklight {
         mbed::Ticker* ticker;
         mbed::DigitalOut* pin;
         int intensity;
+#endif
 };
 
 #endif
