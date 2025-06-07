@@ -21,6 +21,17 @@
 #ifdef __ZEPHYR__
 
 #include "Arduino.h"
+
+#if __has_include ("HasIncludeArduinoGraphics.h")
+#include "SDRAM.h"
+#include "ArduinoGraphics.h"
+#define HAS_ARDUINOGRAPHICS
+
+static uint32_t lcd_x_size = 480;
+static uint32_t lcd_y_size = 800;
+#endif
+
+
 /** 
  * @enum DisplayPixelFormat
  * @brief Display pixel format enumeration.
@@ -60,24 +71,21 @@ enum DisplayPixelFormat {
  * @class Display
  * @brief The main class for controlling a camera.
  */
-class Display {
-private:
-    const struct device *gdev;
-    struct display_buffer_descriptor *buf_desc;
-    
- protected:
-    int16_t _height, _width;
-
+class Display
+#ifdef HAS_ARDUINOGRAPHICS
+ : public ArduinoGraphics
+#endif
+{
 public:
     /**
     * @brief Construct a new Camera object.
     */
-    Display();
+    Display(int width = 800, int height = 480);
 
     /**
     * @brief Initialize the display
     */
-    bool begin(DisplayPixelFormat pixformat = DISPLAY_RGB565, int rotation = 0);
+    bool begin(DisplayPixelFormat pixformat = DISPLAY_RGB565);
     
     /**
     * @brief a frame.
@@ -110,7 +118,58 @@ public:
     int16_t width(void)  { return _width; }
     int16_t height(void) { return _height; }
 
-   
+
+#ifdef HAS_ARDUINOGRAPHICS
+  /**
+   * @brief Clear the display.
+   */
+  void clear();
+
+  /**
+   * @brief Begin drawing operations on the display.
+   */
+  virtual void beginDraw();
+
+  /**
+   * @brief End drawing operations on the display.
+   */
+  virtual void endDraw();
+
+  /**
+   * @brief Set the color of the pixel at the specified coordinates.
+   * 
+   * @param x The x-coordinate of the pixel.
+   * @param y The y-coordinate of the pixel.
+   * @param r The red component of the color.
+   * @param g The green component of the color.
+   * @param b The blue component of the color.
+   */
+  virtual void set(int x, int y, uint8_t r, uint8_t g, uint8_t b);
+  
+  uint32_t getDisplayXSize(){
+    return lcd_x_size;
+  }
+
+  uint32_t getDisplayYSize(){
+    return lcd_y_size;
+  }
+  
+  void lcdClear(uint16_t Color);
+  
+#endif
+
+  
+private:
+    const struct device *gdev;
+    struct display_buffer_descriptor *buf_desc;
+#ifdef HAS_ARDUINOGRAPHICS
+    uint16_t *buffer = nullptr;
+    uint32_t sizeof_framebuffer;
+#endif
+ protected:
+    int16_t _height, _width;
+    bool    _rotated = false;
+
 };
 
 #endif // __GIGA_DISPLAY_H__
