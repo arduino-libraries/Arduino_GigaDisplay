@@ -161,8 +161,10 @@ public:
 private:
     const struct device *gdev;
     struct display_buffer_descriptor *buf_desc;
+#if defined( HAS_ARDUINOGRAPHICS) || __has_include ("lvgl.h")
     uint16_t *buffer = nullptr;
     uint32_t sizeof_framebuffer;
+#endif
  protected:
     int16_t _height, _width;
     bool    _rotated = false;

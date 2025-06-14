@@ -25,12 +25,11 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/display.h>
 
-
 #if __has_include ("lvgl.h")
 #include "lvgl.h"
 #endif
 
-/* Private function prototypes -----------------------------------------------*/
+
 #if __has_include ("lvgl.h")
 #if __MBED__
 #include "mbed.h"
@@ -50,6 +49,7 @@ static rtos::Thread lvgl_inc_thd;
 void lvgl_displayFlushing(lv_disp_drv_t * disp, const lv_area_t * area, lv_color_t * color_p);
 #endif
 #endif
+
 
 #ifdef HAS_ARDUINOGRAPHICS
 Display::Display(int width, int height) : ArduinoGraphics(width, height), gdev(NULL)
@@ -187,7 +187,6 @@ bool Display::begin(DisplayPixelFormat pixformat) {
 
   textFont(Font_5x7);
 #endif //arduinoGraphics
-
 
   #if __has_include("lvgl.h")
   printk("initializing LVGL!!!!\n");
@@ -417,7 +416,7 @@ void lvgl_displayFlushing(lv_display_t * disp, const lv_area_t * area, unsigned 
     uint32_t offsetPos  = (area_in_use->x1 + (lcd_x_size * area_in_use->y1)) * sizeof(uint16_t);
     //dsi_lcdDrawImage((void *) px_map, (void *)(dsi_getActiveFrameBuffer() + offsetPos), w, h, DMA2D_INPUT_RGB565);
     //--- cant do this memcpy(px_map, buffer + offsetPos, w * h);
-    Display::write8(0, 0, buffer);
+    //Display::write8(0, 0, buffer);
 #endif
     lv_display_flush_ready(disp);         /* Indicate you are ready with the flushing*/
 }
@@ -431,12 +430,13 @@ void lvgl_displayFlushing(lv_disp_drv_t * disp, const lv_area_t * area, lv_color
     dsi_lcdDrawImage((void *) color_p, (void *)(dsi_getActiveFrameBuffer() + offsetPos), width, height, DMA2D_INPUT_RGB565);
 #else
     //--- cant do this memcpy(px_map, buffer + offsetPos, w * h);
-    Display::write8(0, 0, buffer);
+    //Display::write8(0, 0, buffer);
 
 #endif
     lv_disp_flush_ready(disp);         /* Indicate you are ready with the flushing*/
 }
 #endif
-#endif
+#endif //end lvgl
+
 
 #endif //__ZEPHYR__
