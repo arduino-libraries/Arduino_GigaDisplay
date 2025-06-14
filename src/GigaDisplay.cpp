@@ -32,12 +32,12 @@
 
 /* Private function prototypes -----------------------------------------------*/
 #if __has_include ("lvgl.h")
-#if defined(__MBED__)
+#if __MBED__
 #include "mbed.h"
 #endif
 #if (LVGL_VERSION_MAJOR == 9)
 void lvgl_displayFlushing(lv_display_t * display, const lv_area_t * area, unsigned char * px_map);
-#if defined(__MBED__)
+#if __MBED__
 static void inc_thd() {
     while (1) {
       lv_tick_inc(16);
@@ -49,7 +49,7 @@ static rtos::Thread lvgl_inc_thd;
 #else
 void lvgl_displayFlushing(lv_disp_drv_t * disp, const lv_area_t * area, lv_color_t * color_p);
 #endif
-
+#endif
 
 #ifdef HAS_ARDUINOGRAPHICS
 Display::Display(int width, int height) : ArduinoGraphics(width, height), gdev(NULL)
@@ -212,9 +212,9 @@ bool Display::begin(DisplayPixelFormat pixformat) {
     }
     lv_display_set_buffers(display, buf1, NULL, width() * height() / 10, LV_DISPLAY_RENDER_MODE_PARTIAL);  /*Initialize the display buffer.*/
     lv_display_set_flush_cb(display, lvgl_displayFlushing);
-
+   #if __MBED__
     lvgl_inc_thd.start(inc_thd);
-    
+   #endif
     printk("LVGL Initialized\n");
 
   #else //LVGL_VERSION_MAJOR
@@ -414,13 +414,14 @@ void lvgl_displayFlushing(lv_display_t * disp, const lv_area_t * area, unsigned 
     uint32_t offsetPos  = (area_in_use->x1 + (dsi_getDisplayXSize() * area_in_use->y1)) * sizeof(uint16_t);
     dsi_lcdDrawImage((void *) px_map, (void *)(dsi_getActiveFrameBuffer() + offsetPos), w, h, DMA2D_INPUT_RGB565);
 #else
-    uint32_t offsetPos  = (area_in_use->x1 + (getDisplayXSize() * area_in_use->y1)) * sizeof(uint16_t);
+    uint32_t offsetPos  = (area_in_use->x1 + (lcd_x_size * area_in_use->y1)) * sizeof(uint16_t);
     //dsi_lcdDrawImage((void *) px_map, (void *)(dsi_getActiveFrameBuffer() + offsetPos), w, h, DMA2D_INPUT_RGB565);
-    memcpy(px_map, buffer + offest, w * h);
-    write8(0, 0, buffer);
+    //--- cant do this memcpy(px_map, buffer + offsetPos, w * h);
+    Display::write8(0, 0, buffer);
 #endif
     lv_display_flush_ready(disp);         /* Indicate you are ready with the flushing*/
 }
+
 #else
 void lvgl_displayFlushing(lv_disp_drv_t * disp, const lv_area_t * area, lv_color_t * color_p) {
     uint32_t width      = lv_area_get_width(area);
@@ -429,8 +430,9 @@ void lvgl_displayFlushing(lv_disp_drv_t * disp, const lv_area_t * area, lv_color
 #if defined(__MBED__)
     dsi_lcdDrawImage((void *) color_p, (void *)(dsi_getActiveFrameBuffer() + offsetPos), width, height, DMA2D_INPUT_RGB565);
 #else
-    memcpy(color_p, buffer + offest, w * h);
-    write8(0, 0, buffer);
+    //--- cant do this memcpy(px_map, buffer + offsetPos, w * h);
+    Display::write8(0, 0, buffer);
+
 #endif
     lv_disp_flush_ready(disp);         /* Indicate you are ready with the flushing*/
 }

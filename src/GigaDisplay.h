@@ -26,11 +26,10 @@
 #include "SDRAM.h"
 #include "ArduinoGraphics.h"
 #define HAS_ARDUINOGRAPHICS
+#endif
 
 static uint32_t lcd_x_size = 480;
 static uint32_t lcd_y_size = 800;
-#endif
-
 
 /** 
  * @enum DisplayPixelFormat
@@ -77,46 +76,54 @@ class Display
 #endif
 {
 public:
-    /**
-    * @brief Construct a new Camera object.
-    */
-    Display(int width = 800, int height = 480);
+  /**
+  * @brief Construct a new Camera object.
+  */
+  Display(int width = 800, int height = 480);
 
-    /**
-    * @brief Initialize the display
-    */
-    bool begin(DisplayPixelFormat pixformat = DISPLAY_RGB565);
+  /**
+  * @brief Initialize the display
+  */
+  bool begin(DisplayPixelFormat pixformat = DISPLAY_RGB565);
+  
+  /**
+  * @brief a frame.
+  * 
+  * @param fb Reference to a FrameBuffer object to store the frame data.
+  * @param timeout Time in milliseconds to wait for a frame (default: 5000).
+  * @return true if the frame is successfully captured, otherwise false.
+  */
+  //bool grabFrame(FrameBuffer &fb, uint32_t timeout = 5000);
+  
+  
+  /**
+  *
+  *
+  *
+  *
+  */
+  int write8(const uint16_t x,
+      const uint16_t y,
+      const void *buf);
+      
+  void setFrameDesc(uint16_t w, uint16_t h, uint16_t pitch, uint32_t buf_size);
+  void startFrameBuffering();
+  void endFrameBuffering();
+
+  int setBlanking(bool on);
+
+  void* getFrameBuffer();
+
+  int16_t width(void)  { return _width; }
+  int16_t height(void) { return _height; }
     
-    /**
-    * @brief a frame.
-    * 
-    * @param fb Reference to a FrameBuffer object to store the frame data.
-    * @param timeout Time in milliseconds to wait for a frame (default: 5000).
-    * @return true if the frame is successfully captured, otherwise false.
-    */
-    //bool grabFrame(FrameBuffer &fb, uint32_t timeout = 5000);
-    
-    
-    /**
-    *
-    *
-    *
-    *
-    */
-    int write8(const uint16_t x,
-        const uint16_t y,
-        const void *buf);
-        
-    void setFrameDesc(uint16_t w, uint16_t h, uint16_t pitch, uint32_t buf_size);
-    void startFrameBuffering();
-    void endFrameBuffering();
+  uint32_t getDisplayXSize(){
+    return lcd_x_size;
+  }
 
-    int setBlanking(bool on);
-
-    void* getFrameBuffer();
-
-    int16_t width(void)  { return _width; }
-    int16_t height(void) { return _height; }
+  uint32_t getDisplayYSize(){
+    return lcd_y_size;
+  }
 
 
 #ifdef HAS_ARDUINOGRAPHICS
@@ -146,14 +153,6 @@ public:
    */
   virtual void set(int x, int y, uint8_t r, uint8_t g, uint8_t b);
   
-  uint32_t getDisplayXSize(){
-    return lcd_x_size;
-  }
-
-  uint32_t getDisplayYSize(){
-    return lcd_y_size;
-  }
-  
   void lcdClear(uint16_t Color);
   
 #endif
@@ -162,16 +161,13 @@ public:
 private:
     const struct device *gdev;
     struct display_buffer_descriptor *buf_desc;
-#if defined(HAS_ARDUINOGRAPHICS)  || __has_include ("lvgl.h") 
     uint16_t *buffer = nullptr;
     uint32_t sizeof_framebuffer;
-#endif
  protected:
     int16_t _height, _width;
     bool    _rotated = false;
 
 };
 
-#endif // __GIGA_DISPLAY_H__
-
 #endif // __ZEPHYR__
+#endif // __GIGA_DISPLAY_H__
