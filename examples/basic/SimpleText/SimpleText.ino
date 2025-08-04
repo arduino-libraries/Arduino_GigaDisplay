@@ -15,10 +15,16 @@
   This example code is in the public domain.
 */
 
+#ifdef __MBED__
 #include "Arduino_H7_Video.h"
 #include "ArduinoGraphics.h"
-
 Arduino_H7_Video Display(800, 480, GigaDisplayShield);
+//Arduino_H7_Video Display(1024, 768, USBCVideo);
+#elif defined(__ZEPHYR__)
+#include "Arduino_GigaDisplay.h"
+#include "ArduinoGraphics.h"
+Display Display(800, 480);
+#endif
 
 void setup() {
   Display.begin();
