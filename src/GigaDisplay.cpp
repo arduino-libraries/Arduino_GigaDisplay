@@ -190,7 +190,7 @@ bool Display::begin(DisplayPixelFormat pixformat) {
 
   #if __has_include("lvgl.h")
   printk("initializing LVGL!!!!\n");
-    /* Initiliaze LVGL library */
+    /* Initialize LVGL library */
     lv_init();
 
 
