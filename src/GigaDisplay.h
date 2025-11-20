@@ -21,6 +21,9 @@
 #ifdef __ZEPHYR__
 
 #include "Arduino.h"
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/display.h>
 
 #if __has_include ("HasIncludeArduinoGraphics.h")
 #include "SDRAM.h"
@@ -160,7 +163,7 @@ public:
   
 private:
     const struct device *gdev;
-    struct display_buffer_descriptor *buf_desc;
+    struct display_buffer_descriptor buf_desc;
 #if defined( HAS_ARDUINOGRAPHICS) || __has_include ("lvgl.h")
     uint16_t *buffer = nullptr;
     uint32_t sizeof_framebuffer;

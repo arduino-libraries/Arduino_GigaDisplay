@@ -88,6 +88,7 @@ bool Display::begin(DisplayPixelFormat pixformat) {
           if (capabilities.current_pixel_format != PIXEL_FORMAT_RGB_565) {
             ret = display_set_pixel_format(this->gdev, PIXEL_FORMAT_RGB_565);
           }
+					printk("RGB565 set\n");
           format_spec = 1;
           break;
       case DISPLAY_RGB888:
@@ -253,32 +254,31 @@ bool Display::begin(DisplayPixelFormat pixformat) {
 int Display::write8(const uint16_t x,
             const uint16_t y,
             const void *buf) {
-              
 
 //  printk("Display::write8(%u %u %p) %p %x\n", x, y, buf, 
 //      &((struct display_driver_api *)gdev->api)->write, *((uint32_t*)(&((struct display_driver_api *)gdev->api)->write)));
 
-  return display_write(this->gdev, x, y, this->buf_desc, buf);
+  return display_write(this->gdev, x, y, &buf_desc, buf);
   
 }
 
 void Display::setFrameDesc(uint16_t w, uint16_t h, uint16_t pitch, uint32_t buf_size) {
-	this->buf_desc->buf_size = buf_size;
-	this->buf_desc->width = w;  /** Number of pixels between consecutive rows in the data buffer */
-	this->buf_desc->height = h;  /** Data buffer row width in pixels */
-	this->buf_desc->pitch = pitch;	/** Data buffer row height in pixels */
+	buf_desc.buf_size = buf_size;
+	buf_desc.width = w;  /** Number of pixels between consecutive rows in the data buffer */
+	buf_desc.height = h;  /** Data buffer row width in pixels */
+	buf_desc.pitch = pitch;	/** Data buffer row height in pixels */
     
 }
 
 void Display::startFrameBuffering() {
 
-	this->buf_desc->frame_incomplete = false;
+	buf_desc.frame_incomplete = false;
 
 }
 
 void Display::endFrameBuffering() {
 
-	this->buf_desc->frame_incomplete = true;
+	buf_desc.frame_incomplete = true;
 
 }
 
