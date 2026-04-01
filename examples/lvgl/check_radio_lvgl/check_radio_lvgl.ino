@@ -1,8 +1,9 @@
-#include "Arduino_H7_Video.h"
+#define ARDUINO_GIGA_DISPLAY_VIDEO
+#include "Arduino_GigaDisplay.h"
 #include "lvgl.h"
 #include "Arduino_GigaDisplayTouch.h"
 
-Arduino_H7_Video          Display(800, 480, GigaDisplayShield);
+Arduino_Video          Display(800, 480, GigaDisplayShield);
 Arduino_GigaDisplayTouch  TouchDetector;
 
 void setup() {
