@@ -10,7 +10,7 @@ This library contains a set of examples to use the [GIGA Display Shield](docs.ar
 - [Arduino_GigaDisplayTouch](https://github.com/arduino-libraries/Arduino_GigaDisplayTouch)
 - [Arduino_BMI270_BMM150](https://github.com/arduino-libraries/Arduino_BMI270_BMM150)
 - [Arduino_GigaDisplayGFX](https://github.com/arduino-libraries/Arduino_GigaDisplay_GFX)
-- [Arducam_dvp](https://github.com/ArduCAM/Arducam_dvp)
+- [arducam_dvp](https://github.com/ArduCAM/Arducam_dvp)
 
 It will also install the [lvgl](https://github.com/lvgl/lvgl) library, which is required for a large number of examples in this repository.
 
