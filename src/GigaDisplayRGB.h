@@ -13,41 +13,34 @@ class GigaDisplayRGB {
         void writeByte(uint8_t,uint8_t);
 };
 
-#include "mbed.h"
-using namespace std::chrono_literals;
-using namespace std::chrono;
+#if defined(__MBED__)
+    #include "mbed.h"
+    using namespace std::chrono_literals;
+    using namespace std::chrono;
+#elif defined(__ZEPHYR__)
+    #include <zephyr/kernel.h>
+#endif
 
 class GigaDisplayBacklight {
     public:
-        GigaDisplayBacklight() {}
-        void begin(int target_percent = 100) {
-            pin = new mbed::DigitalOut(PB_12);
-            ticker = new mbed::Ticker();
-            ticker->attach(mbed::callback(this, &GigaDisplayBacklight::cb), 2ms);
-            set(target_percent);
-        }
-        void cb() {
-            static int counter = 0;
-            if (counter >= intensity) {
-                *pin = 0;
-            } else {
-                *pin = 1;
-            }
-            counter += 10;
-            if (counter == 100) {
-                counter = 0;
-            }
-        }
-        void set(int target_percent) {
-            intensity = target_percent;
-        }
-        void off() {
-            set(0);
-        }
+        GigaDisplayBacklight();
+        void begin(int target_percent = 100);
+        void set(int target_percent);
+        void off();
+
     private:
-        mbed::Ticker* ticker;
-        mbed::DigitalOut* pin;
         int intensity;
+        
+        #if defined(__MBED__)
+            mbed::Ticker* ticker;
+            mbed::DigitalOut* pin;
+            void cb();
+        #elif defined(__ZEPHYR__)
+            struct k_timer timer;
+            static void zephyr_timer_handler(struct k_timer *dummy);
+            static GigaDisplayBacklight* _instance; 
+            void process_step();
+        #endif
 };
 
 #endif

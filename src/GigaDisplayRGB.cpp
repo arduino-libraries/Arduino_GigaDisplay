@@ -30,3 +30,65 @@ void GigaDisplayRGB::writeByte(uint8_t subAddress, uint8_t data)
     Wire1.write(data);
     Wire1.endTransmission();
 }
+
+#ifdef __ZEPHYR__
+GigaDisplayBacklight* GigaDisplayBacklight::_instance = nullptr;
+
+void GigaDisplayBacklight::zephyr_timer_handler(struct k_timer *timer_id) {
+    if (_instance) {
+        _instance->process_step();
+    }
+}
+#endif
+
+GigaDisplayBacklight::GigaDisplayBacklight() : intensity(0) {
+    #ifdef __ZEPHYR__
+    _instance = this;
+    #endif
+}
+
+void GigaDisplayBacklight::begin(int target_percent) {
+    set(target_percent);
+
+#if defined(__MBED__)
+    pin = new mbed::DigitalOut(PB_12);
+    ticker = new mbed::Ticker();
+    ticker->attach(mbed::callback(this, &GigaDisplayBacklight::cb), 2ms);
+#elif defined(__ZEPHYR__)
+    pinMode(74, OUTPUT); // 74 = PB_12
+    k_timer_init(&timer, GigaDisplayBacklight::zephyr_timer_handler, NULL);
+    k_timer_start(&timer, K_MSEC(2), K_MSEC(2));
+#endif
+}
+
+#if defined(__MBED__)
+void GigaDisplayBacklight::cb() {
+    static int counter = 0;
+    if (counter >= intensity) {
+        *pin = 0;
+    } else {
+        *pin = 1;
+    }
+    counter += 10;
+    if (counter == 100) counter = 0;
+}
+#elif defined(__ZEPHYR__)
+void GigaDisplayBacklight::process_step() {
+    static int counter = 0;
+    if (counter >= intensity) {
+        digitalWrite(74, LOW); 
+    } else {
+        digitalWrite(74, HIGH);
+    }
+    counter += 10;
+    if (counter == 100) counter = 0;
+}
+#endif
+
+void GigaDisplayBacklight::set(int target_percent) {
+    intensity = target_percent;
+}
+
+void GigaDisplayBacklight::off() {
+    set(0);
+}

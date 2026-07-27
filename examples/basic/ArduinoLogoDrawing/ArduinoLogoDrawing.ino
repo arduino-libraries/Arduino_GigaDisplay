@@ -8,11 +8,12 @@
   https://github.com/arduino/ArduinoCore-mbed/blob/main/libraries/Arduino_H7_Video/
 */
 
-#include "Arduino_H7_Video.h"
+#define ARDUINO_GIGA_DISPLAY_VIDEO
+#include "Arduino_GigaDisplay.h"
 #include "ArduinoGraphics.h"
 
-Arduino_H7_Video Display(800, 480, GigaDisplayShield);
-//Arduino_H7_Video Display(1024, 768, USBCVideo);
+Arduino_Video Display(800, 480, GigaDisplayShield);
+//Arduino_Video Display(1024, 768, USBCVideo);
 
 void setup() {
   Display.begin();
