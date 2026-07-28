@@ -121,7 +121,7 @@ jobs:
             - name: Arduino_BMI270_BMM150
             - name: Arduino_GigaDisplay_GFX
             - name: lvgl
-            - name: Arducam_dvp
+            - name: arducam_dvp
             ${{ matrix.libraries }}
           sketch-paths: |
             ${{ matrix.sketch-paths || env.UNIVERSAL_SKETCH_PATHS }}
